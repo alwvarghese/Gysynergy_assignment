@@ -18,3 +18,14 @@ fact.transactions has a many-to-one relationship with hier.prod on sku_id.
 fact.transactions has a many-to-one relationship with hier.pricestate on price_substate_id.
 
 fact.averagecosts has a many-to-one relationship with hier.prod on sku_id.
+
+## ETL Methodology
+
+I have used Medallion Architecture to perform ETL operations on the data. 
+1. The bronze layer creates a raw copy of the data in the ADLS location along with adding audit columns. No other operation is performed on this layer. The ingestion hapeens in append mode so that new data can be incrementally stored in the bronze layer.
+2. The silver layer intends to clean the data, perform DQ checks and standardize the data. The write strategy for this layer is overwrite and this acts as a materialized view for the gold layer.
+3. The gold layer is aggregation of the cleaned data to get meaningful insights into the data.
+
+Below is the screenshot for job run based on the architecture:
+![image](https://github.com/user-attachments/assets/0d77c13b-8bb9-40ed-947c-293aca77a7b5)
+
